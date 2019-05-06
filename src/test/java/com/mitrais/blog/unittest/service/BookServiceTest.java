@@ -21,16 +21,21 @@ import com.mitrais.blog.unittest.domain.Book;
 import com.mitrais.blog.unittest.domain.Item;
 import com.mitrais.blog.unittest.domain.Shelf;
 import com.mitrais.blog.unittest.repo.BookRepository;
+import com.mitrais.blog.unittest.repo.ShelfRepository;
 
 import javassist.NotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BookServiceTest {
 	
-	 @InjectMocks
+	 	@InjectMocks
 	    private BookService bookService; // System Under Test
+	 	@InjectMocks
+	 	private ShelfService shelfService;
 	    @Mock
 	    private BookRepository bookRepository; // Dependencies will be mocked
+	    @Mock
+	    private ShelfRepository shelfRepository;
 	    
 	    @Test
 	    public void findAllBookTest(){
@@ -85,20 +90,39 @@ public class BookServiceTest {
 	    public void addBookIntoShelf_OK(){
 	    	Book book = new Book(0, "isbn1","title1","aut1", false, new Shelf(1, Long.valueOf(10), Long.valueOf(4)));
 	        Mockito.when(bookRepository.save(any())).thenReturn(book);
+	        //Shelf shelf = new Shelf(1,2L,2L);
+	        //Mockito.when(shelfRepository.findById(1)).thenReturn(shelf);
 
-	        boolean result = bookService.addBookIntoShelf(book);
+	        boolean result = bookService.addBookIntoShelf(book,1);
 	        assertTrue(result);
+	        //assertEquals(5L, book.getShelf().getCurrentCapacity().longValue());
 	    }
 	    
-	    @Test(expected=DataIntegrityViolationException.class)
-	    public void addBookIntoShelf_NOTOK(){
-	    	Book book = new Book(null, "isbn1","title1","aut1", false, new Shelf(1, Long.valueOf(10), Long.valueOf(4)));
-	        Mockito.when(bookRepository.save(any()))
-	                .thenThrow(new DataIntegrityViolationException("Data Error"));
-
-	        // action
-	        boolean result = bookService.addBookIntoShelf(book);
-	        assertFalse(result);
+//	    @Test(expected=DataIntegrityViolationException.class)
+//	    public void addBookIntoShelf_NOTOK(){
+//	    	Book book = new Book(null, "isbn1","title1","aut1", false, new Shelf(1, Long.valueOf(10), Long.valueOf(4)));
+//	        Mockito.when(bookRepository.save(any()))
+//	                .thenThrow(new DataIntegrityViolationException("Data Error"));
+//
+//	        // action
+//	        boolean result = bookService.addBookIntoShelf(book);
+//	        assertFalse(result);
+//	    }
+	    
+	    @Test
+	    public void addBookIntoShelf_Already() {
+	    	Book book = new Book(0, "isbn1","title1","aut1", true, new Shelf(1, Long.valueOf(10), Long.valueOf(4)));
+	    	boolean rst = bookService.addBookIntoShelf(book,1);
+	    	
+	    	assertFalse(rst);
+	    }
+	    
+	    @Test
+	    public void addBookIntoShelf_MaxHit() {
+	    	Book book = new Book(1, "isbn1","title1","aut1", false, null);
+	    	boolean rst = bookService.addBookIntoShelf(book,3);
+	    	
+	    	assertFalse(rst);
 	    }
 	    
 	    @Test
@@ -110,15 +134,14 @@ public class BookServiceTest {
 	        assertTrue(result);
 	    }
 	    
-	    @Test(expected=DataIntegrityViolationException.class)
+	    @Test //(expected=DataIntegrityViolationException.class)
 	    public void removeBookFromShelf_NOTOK(){
 	    	Book book = new Book(1, "isbn1","title1","aut1", false, new Shelf(1, Long.valueOf(10), Long.valueOf(4)));
-	        Mockito.when(bookRepository.save(any()))
-	                .thenThrow(new DataIntegrityViolationException("Data Error"));
+	        //Mockito.when(bookRepository.save(any())).thenThrow(new DataIntegrityViolationException("Data Error"));
 
 	        // action
-	        boolean result = bookService.addBookIntoShelf(book);
-	        //assertFalse(result);
+	        boolean result = bookService.removeBookFromShelf(book);
+	        assertFalse(result);
 	    }
 	    
 	    @Test
@@ -127,7 +150,7 @@ public class BookServiceTest {
 	        //Mockito.when(bookRepository.save(any())).thenReturn(book);
 
 	        // action
-	        boolean result = bookService.addBookIntoShelf(book);
+	        boolean result = bookService.addBookIntoShelf(book,1);
 	        assertFalse(result);
 	    }
 	    
@@ -169,6 +192,19 @@ public class BookServiceTest {
 	    	bookService.findBooks(title, status);
 	    	
 	    	Mockito.verify(bookRepository).findAll();
+	    }
+	    
+	    @Test
+	    public void addBook_OK(){
+	    	//Book book = new Book(11, "isbn1","title1","aut1", false, null);
+	    	Book book = new Book(1, "isbn1","title1","aut1", false, new Shelf(1, Long.valueOf(10), Long.valueOf(4)));
+
+	        // action
+	        Book result = bookService.addBook(book);
+	    	//Book result = bookRepository.save(book);
+	        
+	        Mockito.verify(bookRepository).save(book);
+	        //assertEquals(book, result);
 	    }
 
 }

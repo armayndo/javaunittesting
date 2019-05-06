@@ -14,8 +14,10 @@ public interface IBookService {
 	
 	Book findOneBook(Integer id) throws NotFoundException;
 	
-	boolean addBookIntoShelf (Book book);
+	boolean addBookIntoShelf (Book book, Integer shelfId);
 	
 	boolean removeBookFromShelf(Book book);
+	
+	Book addBook(Book book);
 
 }

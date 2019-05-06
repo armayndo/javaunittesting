@@ -73,13 +73,13 @@ public class LibraryControllerTest {
 	public void addBook_OK() throws Exception {
 		//Prepatarion
 		Book book = new Book(1, "isbn1","title1","aut1", false, new Shelf(1, Long.valueOf(10), Long.valueOf(4)));
-		when(bookService.addBookIntoShelf(any())).thenReturn(true);
+		when(bookService.addBookIntoShelf(any(),any())).thenReturn(true);
 		when(bookService.findOneBook(1)).thenReturn(book);
 		
 		// ACTION
         // call GET /items will return application/json and JSON Array
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/lib/addBook/1");  // GET /items
+                .get("/api/lib/addBook/1/1");  // GET /items
         
         // ACTION AND ASSERTION AT ONCE
         mockMvc.perform(request)
@@ -90,17 +90,18 @@ public class LibraryControllerTest {
 	@Test
 	public void addBook_NOTOK() throws Exception {
 		//Prepatarion
-		when(bookService.addBookIntoShelf(any())).thenReturn(false);
+		when(bookService.addBookIntoShelf(any(),any())).thenReturn(false);
 		
 		// ACTION
         // call GET /items will return application/json and JSON Array
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/api/lib/addBook/1");  // GET /items
+                .get("/api/lib/addBook/1/1");  // GET /items
         
         // ACTION AND ASSERTION AT ONCE
         mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().json("{id:null,isbn:null,title:null,author:null,shelf:null,shelved:false}"));                    // status expectation
+                .andExpect(status().is(400))
+                //.andExpect(content().json("{id:null,isbn:null,title:null,author:null,shelf:null,shelved:false}"))                    // status expectation
+                ;
 	}
 	
 	@Test
@@ -124,7 +125,7 @@ public class LibraryControllerTest {
 	@Test
 	public void removeBook_NOTOK() throws Exception {
 		//Prepatarion
-		when(bookService.removeBookFromShelf(any())).thenReturn(false);
+		//when(bookService.removeBookFromShelf(any())).thenReturn(false);
 		
 		// ACTION
         // call GET /items will return application/json and JSON Array
@@ -133,9 +134,24 @@ public class LibraryControllerTest {
         
         // ACTION AND ASSERTION AT ONCE
         mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().json("{id:null,isbn:null,title:null,author:null,shelf:null,shelved:false}"));                    // status expectation
+                .andExpect(status().is(400))
+                //.andExpect(content().json("{id:null,isbn:null,title:null,author:null,shelf:null,shelved:false}"))                    // status expectation
+                ;
 	}
+	
+	@Test
+    public void addShelf_OK() throws Exception {
+        // PREPARATION
+    	RequestBuilder request = MockMvcRequestBuilders
+                .post("/api/lib/addshelf")  // Post /items
+                .param("maxcap", "3")
+                ;
+
+        // ACTION AND ASSERTION AT ONCE
+         mockMvc.perform(request) // Post /items as the request
+                 .andExpect(status().isCreated())                     // status expectation
+                 ;
+    }
 
 
 }

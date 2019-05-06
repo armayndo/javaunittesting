@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.mitrais.blog.unittest.domain.Book;
 import com.mitrais.blog.unittest.domain.Shelf;
 import com.mitrais.blog.unittest.service.IBookService;
+import com.mitrais.blog.unittest.service.IShelfService;
 
 import javassist.NotFoundException;
 
@@ -33,6 +34,9 @@ public class BookControllerTest {
 
     @MockBean
     private IBookService bookService;
+    
+    @MockBean
+	private IShelfService shelfService;
 
     @Test
     public void findAllBasic() throws Exception {
@@ -114,6 +118,22 @@ public class BookControllerTest {
         // ACTION AND ASSERTION AT ONCE
         mockMvc.perform(request)
                 .andExpect(status().isNotFound());                    // status expectation
+    }
+    
+    @Test
+    public void regBook_OK() throws Exception {
+        // PREPARATION
+    	RequestBuilder request = MockMvcRequestBuilders
+                .post("/api/book/regbook")  // Post /items
+                .param("title", "testTitle")
+                .param("isbn", "123")
+                .param("aut", "testAut")
+                ;
+
+        // ACTION AND ASSERTION AT ONCE
+         mockMvc.perform(request) // Post /items as the request
+                 .andExpect(status().isCreated())                     // status expectation
+                 ;
     }
 
 }

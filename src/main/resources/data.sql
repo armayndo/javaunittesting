@@ -17,7 +17,7 @@ INSERT INTO `book` (`id`, `author`, `status_shelved`, `isbn`, `title`, `shelf_id
 	(1, 'aut1', 0, 'isbn1', 'title1', 1),
 	(2, 'aut2', 1, 'isbn2', 'title2', 1),
 	(3, 'aut3', 1, 'isbn3', 'title3', 1),
-	(4, 'aut4', 1, 'isbn4', 'title4', 1),
+	(4, 'aut4', 1, 'isbn4', 'title4', 3),
 	(5, 'aut5', 1, 'isbn5', 'title5', 2);
 /*!40000 ALTER TABLE `book` ENABLE KEYS */;
 
@@ -32,9 +32,9 @@ INSERT INTO `item` (`id`, `name`, `price`, `quantity`) VALUES
 -- Dumping data for table dblibman.shelf: 0 rows
 /*!40000 ALTER TABLE `shelf` DISABLE KEYS */;
 INSERT INTO `shelf` (`shelf_id`, `current_capacity`, `max_capacity`) VALUES
-	(1, 3, 10),
+	(1, 2, 10),
 	(2, 1, 10),
-	(3, 0, 10);
+	(3, 1, 1);
 /*!40000 ALTER TABLE `shelf` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

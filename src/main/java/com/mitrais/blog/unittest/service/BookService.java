@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.mitrais.blog.unittest.domain.Book;
 import com.mitrais.blog.unittest.domain.Shelf;
 import com.mitrais.blog.unittest.repo.BookRepository;
+import com.mitrais.blog.unittest.repo.ShelfRepository;
 
 import javassist.NotFoundException;
 
@@ -17,40 +18,47 @@ import javassist.NotFoundException;
 public class BookService implements IBookService {
 	
 	private BookRepository bookRepository;
+	
+	private ShelfRepository shelfRepository;
 
 	@Autowired
-	public BookService(BookRepository bookRepository) {
+	public BookService(BookRepository bookRepository, ShelfRepository shelfRepository) {
 		this.bookRepository = bookRepository;
+		this.shelfRepository = shelfRepository;
 	}
 
 	@Override
-	public boolean addBookIntoShelf(Book book) {
-		boolean rst = false;
+	public boolean addBookIntoShelf(Book book, Integer shelfId) {
 		if(book.isShelved()) {
 			System.out.println(">>> Sorry Book alerady at the shelf");
+			return false;
 		} else {
-			Shelf shelf = book.getShelf();
-			
-			if(shelf.getMaxCapacity() > shelf.getCurrentCapacity()) {
-				book.setShelved(true);
+			Optional<Shelf> optionalShelf = shelfRepository.findById(shelfId);
+			if(optionalShelf.isPresent()) {
+				Shelf shelf = optionalShelf.get();
 				
-				Long curCap = shelf.getCurrentCapacity();
-				shelf.setCurrentCapacity(curCap+1);
-				book.setShelf(shelf);
-				bookRepository.save(book);
-				rst = true;
-			} else {
-				System.out.println(">>> Sorry shelf is full");
+				if(shelf.getMaxCapacity() > shelf.getCurrentCapacity()) {
+					book.setShelved(true);
+					
+					Long curCap = shelf.getCurrentCapacity();
+					shelf.setCurrentCapacity(curCap+1);
+					book.setShelf(shelf);
+					bookRepository.save(book);
+					return true;
+				} else {
+					System.out.println(">>> Sorry shelf is full");
+					return false;
+				}
 			}
 		}
-		return rst;
+		return false;
 	}
 
 	@Override
 	public boolean removeBookFromShelf(Book book) {
-		boolean rst = false;
 		if(!book.isShelved()) {
 			System.out.println(">>> Sorry Book not available at the shelf");
+			return false;
 		} else {
 			Shelf shelf = book.getShelf();
 			
@@ -60,9 +68,10 @@ public class BookService implements IBookService {
 			shelf.setCurrentCapacity(curCap-1);
 			book.setShelf(shelf);
 			bookRepository.save(book);	
-			rst = true;
+			book.setShelf(null);
+			bookRepository.save(book);
+			return true;
 		}
-		return rst;
 	}
 
 	@Override
@@ -98,6 +107,12 @@ public class BookService implements IBookService {
 		}
 		
 		return rstBook;
+	}
+
+	@Override
+	public Book addBook(Book book) {
+		Book Result = bookRepository.save(book); 
+		return Result;
 	}
 
 }
