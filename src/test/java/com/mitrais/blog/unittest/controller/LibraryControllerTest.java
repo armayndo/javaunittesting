@@ -72,7 +72,7 @@ public class LibraryControllerTest {
 	@Test
 	public void addBook_OK() throws Exception {
 		//Prepatarion
-		Book book = new Book(1, "isbn1","title1","aut1", false, new Shelf(1, Long.valueOf(10), Long.valueOf(4)));
+		Book book = new Book(1, "isbn1","title1","aut1", false, null);
 		when(bookService.addBookIntoShelf(any(),any())).thenReturn(true);
 		when(bookService.findOneBook(1)).thenReturn(book);
 		

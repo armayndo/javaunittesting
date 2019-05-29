@@ -1,8 +1,9 @@
 package com.mitrais.blog.unittest.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.RequestEntity.HeadersBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -123,6 +125,7 @@ public class BookControllerTest {
     @Test
     public void regBook_OK() throws Exception {
         // PREPARATION
+        when(bookService.addBook(any())).thenReturn(new Book());
     	RequestBuilder request = MockMvcRequestBuilders
                 .post("/api/book/regbook")  // Post /items
                 .param("title", "testTitle")
@@ -133,6 +136,7 @@ public class BookControllerTest {
         // ACTION AND ASSERTION AT ONCE
          mockMvc.perform(request) // Post /items as the request
                  .andExpect(status().isCreated())                     // status expectation
+//                 .andExpect(header().string("location", matcher))
                  ;
     }
 

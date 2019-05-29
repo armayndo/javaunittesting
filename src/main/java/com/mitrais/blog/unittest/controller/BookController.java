@@ -65,8 +65,10 @@ public class BookController {
 		newBook.setShelf(null);
 		newBook = bookService.addBook(newBook);
 		
-		//UriComponents uriComponents = b.path("/findbyid/{id}").buildAndExpand(newBook.getId());
-		UriComponents uriComponents = b.path("/showall").build();
+		System.out.println(newBook);
+		UriComponents uriComponents = b.path("/findbyid/{id}").buildAndExpand(newBook.getId());
+		
+		//UriComponents uriComponents = b.path("/showall").build();
 
 		return ResponseEntity.created(uriComponents.toUri()).build();
 	}

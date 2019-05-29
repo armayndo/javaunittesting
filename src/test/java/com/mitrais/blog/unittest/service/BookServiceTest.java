@@ -30,8 +30,10 @@ public class BookServiceTest {
 	
 	 	@InjectMocks
 	    private BookService bookService; // System Under Test
-	 	@InjectMocks
-	 	private ShelfService shelfService;
+	 	
+	 	//@InjectMocks
+	 	//private ShelfService shelfService;
+	 	
 	    @Mock
 	    private BookRepository bookRepository; // Dependencies will be mocked
 	    @Mock
@@ -88,14 +90,16 @@ public class BookServiceTest {
 	    
 	    @Test
 	    public void addBookIntoShelf_OK(){
-	    	Book book = new Book(0, "isbn1","title1","aut1", false, new Shelf(1, Long.valueOf(10), Long.valueOf(4)));
+	    	Book book = new Book(0, "isbn1","title1","aut1", false, null);
+	    	Shelf shelf = new Shelf(1, 10L, 4L); 
 	        Mockito.when(bookRepository.save(any())).thenReturn(book);
+	        Mockito.when(shelfRepository.findById(any())).thenReturn(Optional.of(shelf));
 	        //Shelf shelf = new Shelf(1,2L,2L);
 	        //Mockito.when(shelfRepository.findById(1)).thenReturn(shelf);
 
 	        boolean result = bookService.addBookIntoShelf(book,1);
 	        assertTrue(result);
-	        //assertEquals(5L, book.getShelf().getCurrentCapacity().longValue());
+	        assertEquals(5L, book.getShelf().getCurrentCapacity().longValue());
 	    }
 	    
 //	    @Test(expected=DataIntegrityViolationException.class)
