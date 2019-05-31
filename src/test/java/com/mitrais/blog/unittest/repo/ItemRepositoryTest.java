@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
 @DataJpaTest
 public class ItemRepositoryTest {
 
@@ -37,7 +37,7 @@ public class ItemRepositoryTest {
         itemRepository.deleteAll();
     }
 
-    @Test
+    //@Test
     public void testFindAll(){
         // ACTION
         List<Item> all = itemRepository.findAll();
@@ -46,7 +46,7 @@ public class ItemRepositoryTest {
         assertEquals(3, all.size());
     }
 
-    @Test
+    //@Test
     public void testFindById_Basic(){
         // ACTION
         Optional<Item> optItem = itemRepository.findById(1);
@@ -55,7 +55,7 @@ public class ItemRepositoryTest {
         assertTrue(optItem.isPresent());
     }
 
-    @Test
+    //@Test
     public void testFindById_NotFound(){
         // ACTION
         Optional<Item> optItem = itemRepository.findById(10);
