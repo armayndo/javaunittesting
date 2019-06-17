@@ -14,9 +14,9 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package' 
             }
         }
-        stage('Test') {
+        stage('Deliver') {
             steps {
-                sh 'mvn test'
+                sh './jenkins/scripts/deliver.sh'
             }
         }
         stage('Sonar') {
