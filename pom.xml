@@ -59,7 +59,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-<<<<<<< HEAD
             <plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-surefire-plugin</artifactId>
@@ -68,28 +67,7 @@
 			        <testFailureIgnore>true</testFailureIgnore>
 			    </configuration>
 			</plugin>
-=======
-		<plugin>
-	      <groupId>org.jacoco</groupId>
-	      <artifactId>jacoco-maven-plugin</artifactId>
-	      <version>0.7.4.201502262128</version>
-	      <executions>
-		<execution>
-		  <id>pre-unit-test</id>
-		  <goals>
-		    <goal>prepare-agent</goal>
-		  </goals>
-		</execution>
-		<execution>
-		  <id>post-unit-test</id>
-		  <phase>test</phase>
-		  <goals>
-		    <goal>report</goal>
-		  </goals>
-		</execution>
-	      </executions>
-	    </plugin>
->>>>>>> 4bb72da1d98863883b02d93ab0a3ae0a5683b468
+
         </plugins>
     </build>
 
